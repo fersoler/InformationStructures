@@ -29,6 +29,125 @@ ISgraphDrawPie(IS3,gr3, ISgraphLayout(IS3, gr3, "tree"), c("#806000", "#002080",
 ISgraphDrawPie(IS3,gr3, ISgraphLayout(IS3, gr3, "3Dcube"), c("#806000", "#002080", "#408000"))
 
 
+# Join different IS to get a bayesian IS
+
+getISbayesian <- function(listAlphas, listGammas){
+  
+  # Set the first IS to get common data
+  a1 <- as.data.frame(t(listAlphas[[1]]))
+  size <- length(a1)
+  g1 <- matrix(data.matrix(listGammas[[1]]),nrow = size)
+  IS1 <- ISbuild(a1, g1)
+  allSubs <- IS1$subsetGASS
+  allSubs[,2] <- 0
+  allSubs[,3] <- 0
+  allSubs[,4:(4+size-1)] <- 0
+  colnames(allSubs) <- c(c("subset", "sumAbund", "occur"), paste("a",1:size,sep = ""))
+  newConn <- matrix(0, ncol = 2^size, nrow = 2^size)
+  
+  for(nis in 1:length(listAlphas)){
+    allSubs[1,3] <- allSubs[1,3]+1 # Occurrence of 0
+    theIS <- ISbuild(as.data.frame(t(listAlphas[[nis]])), 
+                     matrix(data.matrix(listGammas[[nis]]),nrow = size))
+    
+    # Set keys, abundances and ocurrences
+    keys <- rep(0,nrow(theIS$points)) # to store new positions of the IS points
+    keys[1] <- 1
+    for(node in 2:nrow(theIS$points)){
+      found <- FALSE
+      toLook <- 2
+      while(!found){
+        if(toString((1:size)[theIS$points[node,] > 0]) == theIS$subsetGASS[toLook,1]){
+          found <- TRUE
+        } else {
+          toLook <- toLook+1
+        }
+      }
+      keys[node] <- toLook
+      allSubs[toLook,2] <- allSubs[toLook,2]+sum(theIS$points[node,])
+      allSubs[toLook,3] <- allSubs[toLook,3]+1
+      allSubs[toLook,4:(4+size-1)] <- 
+        allSubs[toLook,4:(4+size-1)]+theIS$points[node,]
+    }
+    # Now set the connectivity
+    for(n in 1:nrow(theIS$points)){
+      for(m in 1:nrow(theIS$points)){
+        if(theIS$connectivity[n,m] == 1){
+          newConn[keys[n],keys[m]] <- newConn[keys[n],keys[m]]+1
+        }
+      }
+    }
+
+  }
+  
+  # Positions with non-zero occurrences
+  nonZeroPos <- (1:8)[allSubs[,3]>0]
+  
+  # Get non-zero points and matrix
+  points <- allSubs[nonZeroPos,]
+  connect <- newConn[nonZeroPos,nonZeroPos] / points[,3] #/ points[,3]
+  
+  list(points = points,
+       connect = connect
+       )
+}
+
+aL <- list()
+gL <- list()
+init <- 1
+end <- 200
+for(i in init:end){
+  aL[i+1-init] <- as.data.frame(t(alphas3[i,]))
+  gL[i+1-init] <- as.data.frame(matrix(gammas3))
+}
+
+# Test
+(bay <- getISbayesian(aL, gL))
+
+
+# Tests to set node labels
+str_split(bay$points[5,1], ", ")
+str_replace(bay$points[5,1], ", ", "")
+
+(gr <- graph_from_adjacency_matrix(bay$connect, mode="directed", weighted = TRUE))
+
+h <- graph.empty() + vertices(V(gr))
+h <- h + edges(as.vector(t(get.edgelist(gr)[order(E(gr)$weight),])))
+E(h)$weight <- E(gr)$weight[order(E(gr)$weight)]
+
+gr$layout <- layout_in_circle
+
+
+plot(gr, 
+     vertex.label = str_replace_all(bay$points[,1], ", ", ""),
+     vertex.size = 25,
+     #vertex.size = 10+(10*bay$points[,3])/bay$points[1,3],
+     edge.width=5*E(h)$weight, 
+     edge.arrow.size=E(gr)$weight,
+     vertex.color = paste("#00FF00",as.hexmode(floor(255*bay$points[,3]/bay$points[1,3])),sep=""),
+     curved = curve_multiple(gr, start = 0.5),
+     vertex.label.cex = 1,
+     vertex.label.color = "black",
+     layout = 2*t(apply(bay$points[,4:6],1,getCoordNode3D))
+     )
+
+
+# for the layout
+bay$points[,1]
+
+as.hexmode(floor(255*bay$points[,3]/bay$points[1,3]))
+
+str_split(bay$points[,1], ", ")[[6]]
+
+
+(as.integer(str_split(bay$points[,1], ", ")[[6]]))
+
+(rep(0,3)[c(1,3)] <- 1)
+
+rep(0,3)[c(1,3)]
+
+
+integer("3")+1
 
 #####################################################
 # 5 species examples
