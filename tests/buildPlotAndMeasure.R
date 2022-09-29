@@ -40,7 +40,8 @@ getRandomAlphas <- function(n){
 }
 
 # 3 nodes
-set.seed("20220929")
+#set.seed("20220929")
+set.seed("20220927")
 gFix <- matrix(rnorm(9)/20,3,3)*(1-diag(3))-diag(3)
 aFix <- getRandomAlphas(3)/3
 
@@ -56,6 +57,7 @@ for(i in init:end){
 
 # Build bayesian IS
 bay <- getISbayesian(aL, gL)
+bay
 # Build the graph
 grafo <- bayISgraph(bay, 1:3)
 
