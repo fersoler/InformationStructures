@@ -95,7 +95,7 @@ getISbayesian <- function(listAlphas, listGammas){
 aL <- list()
 gL <- list()
 init <- 1
-end <- 200
+end <- 250
 for(i in init:end){
   aL[i+1-init] <- as.data.frame(t(alphas3[i,]))
   gL[i+1-init] <- as.data.frame(matrix(gammas3))
