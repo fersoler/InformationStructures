@@ -69,7 +69,7 @@ getISbayesian <- function(listAlphas, listGammas){
   
   # Get non-zero points and matrix
   points <- allSubs[nonZeroPos,]
-  connect <- newConn[nonZeroPos,nonZeroPos] / points[1,3] #/ points[,3]
+  connect <- newConn[nonZeroPos,nonZeroPos] / points[,3] #/ points[1,3]
   
   list(points = points,
        connect = connect
@@ -166,7 +166,7 @@ bayesianISgraphDrawPie <- function(IS, ISgr, ISlay, colors){
   
   plot(gr,
        layout = ISlay,
-       edge.width=.5+8*E(h)$weight, 
+       edge.width=.3+3*E(h)$weight, 
        edge.arrow.size=.01+10*E(h)$weight,
        edge.width=1,
        edge.curved=curves,

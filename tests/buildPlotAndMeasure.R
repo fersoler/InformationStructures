@@ -41,13 +41,13 @@ getRandomAlphas <- function(n){
 
 # 3 nodes
 set.seed("20220929")
-gFix <- matrix(rnorm(9)/9,3,3)*(1-diag(3))-diag(3)
+gFix <- matrix(rnorm(9)/20,3,3)*(1-diag(3))-diag(3)
 aFix <- getRandomAlphas(3)/3
 
 aL <- list()
 gL <- list()
 init <- 1
-end <- 10
+end <- 20
 for(i in init:end){
   aL[i+1-init] <- as.data.frame(aFix + getRandomAlphas(3)/2)
   gL[i+1-init] <- as.data.frame(matrix(gFix + (matrix(rnorm(9)/3,3,3)*(1-diag(3)))))
