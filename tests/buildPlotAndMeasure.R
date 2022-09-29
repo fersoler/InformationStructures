@@ -1,5 +1,6 @@
 source("R/ISgraph.R")
 source("R/ISmeasures.R")
+source("R/ISbayesian.R")
 
 library(tidyverse)
 
@@ -28,102 +29,71 @@ ISgraphDrawLabels(IS3,gr3, ISgraphLayout(IS3, gr3, "3Dcube"))
 ISgraphDrawPie(IS3,gr3, ISgraphLayout(IS3, gr3, "tree"), c("#806000", "#002080", "#408000"))
 ISgraphDrawPie(IS3,gr3, ISgraphLayout(IS3, gr3, "3Dcube"), c("#806000", "#002080", "#408000"))
 
+###########################################################################
+# Bayesian IS
+###########################################################################
 
-# Join different IS to get a bayesian IS
 
-getISbayesian <- function(listAlphas, listGammas){
-  
-  # Set the first IS to get common data
-  a1 <- as.data.frame(t(listAlphas[[1]]))
-  size <- length(a1)
-  g1 <- matrix(data.matrix(listGammas[[1]]),nrow = size)
-  IS1 <- ISbuild(a1, g1)
-  allSubs <- IS1$subsetGASS
-  allSubs[,2] <- 0
-  allSubs[,3] <- 0
-  allSubs[,4:(4+size-1)] <- 0
-  colnames(allSubs) <- c(c("subset", "sumAbund", "occur"), paste("a",1:size,sep = ""))
-  newConn <- matrix(0, ncol = 2^size, nrow = 2^size)
-  
-  for(nis in 1:length(listAlphas)){
-    allSubs[1,3] <- allSubs[1,3]+1 # Occurrence of 0
-    theIS <- ISbuild(as.data.frame(t(listAlphas[[nis]])), 
-                     matrix(data.matrix(listGammas[[nis]]),nrow = size))
-    
-    # Set keys, abundances and ocurrences
-    keys <- rep(0,nrow(theIS$points)) # to store new positions of the IS points
-    keys[1] <- 1
-    for(node in 2:nrow(theIS$points)){
-      found <- FALSE
-      toLook <- 2
-      while(!found){
-        if(toString((1:size)[theIS$points[node,] > 0]) == theIS$subsetGASS[toLook,1]){
-          found <- TRUE
-        } else {
-          toLook <- toLook+1
-        }
-      }
-      keys[node] <- toLook
-      allSubs[toLook,2] <- allSubs[toLook,2]+sum(theIS$points[node,])
-      allSubs[toLook,3] <- allSubs[toLook,3]+1
-      allSubs[toLook,4:(4+size-1)] <- 
-        allSubs[toLook,4:(4+size-1)]+theIS$points[node,]
-    }
-    # Now set the connectivity
-    for(n in 1:nrow(theIS$points)){
-      for(m in 1:nrow(theIS$points)){
-        if(theIS$connectivity[n,m] == 1){
-          newConn[keys[n],keys[m]] <- newConn[keys[n],keys[m]]+1
-        }
-      }
-    }
-
-  }
-  
-  # Positions with non-zero occurrences
-  nonZeroPos <- (1:8)[allSubs[,3]>0]
-  
-  # Get non-zero points and matrix
-  points <- allSubs[nonZeroPos,]
-  connect <- newConn[nonZeroPos,nonZeroPos] / points[,3] #/ points[,3]
-  
-  list(points = points,
-       connect = connect
-       )
+getRandomAlphas <- function(n){
+  alp <- rnorm(n)
+  alp/sqrt(sum(alp^2))
 }
+
+# 3 nodes
+set.seed("20220929")
+gFix <- matrix(rnorm(9)/9,3,3)*(1-diag(3))-diag(3)
+aFix <- getRandomAlphas(3)/3
 
 aL <- list()
 gL <- list()
 init <- 1
-end <- 200
+end <- 10
 for(i in init:end){
-  aL[i+1-init] <- as.data.frame(t(alphas3[i,]))
-  gL[i+1-init] <- as.data.frame(matrix(gammas3))
+  aL[i+1-init] <- as.data.frame(aFix + getRandomAlphas(3)/2)
+  gL[i+1-init] <- as.data.frame(matrix(gFix + (matrix(rnorm(9)/3,3,3)*(1-diag(3)))))
 }
 
-# Test
-(bay <- getISbayesian(aL, gL))
+
+# Build bayesian IS
+bay <- getISbayesian(aL, gL)
+# Build the graph
+grafo <- bayISgraph(bay, 1:3)
+
+bayesianISgraphDrawLabels(bay, grafo, bayISgraphLayout(bay, grafo, lyType = "3Dcube"))
+bayesianISgraphDrawLabels(bay, grafo, bayISgraphLayout(bay, grafo, lyType = "tree"))
+bayesianISgraphDrawPie(bay, grafo, bayISgraphLayout(bay, grafo, lyType = "3Dcube"),c("#806000", "#002080", "#408000"))
+bayesianISgraphDrawPie(bay, grafo, bayISgraphLayout(bay, grafo, lyType = "tree"),c("#806000", "#002080", "#408000"))
 
 
+# 5 nodes
+set.seed("20220929")
+gFix <- matrix((rnorm(25)-0.3)/25,5,5)*(1-diag(5))-diag(5)
+aFix <- getRandomAlphas(5)/5
 
-(gr <- graph_from_adjacency_matrix(bay$connect, mode="directed", weighted = TRUE))
+aL <- list()
+gL <- list()
+init <- 1
+end <- 10
+for(i in init:end){
+  aL[i+1-init] <- as.data.frame(aFix + getRandomAlphas(5)/2)
+  gL[i+1-init] <- as.data.frame(matrix(gFix + (matrix(rnorm(25)/5,5,5)*(1-diag(5)))))
+}
 
-h <- graph.empty() + vertices(V(gr))
-h <- h + edges(as.vector(t(get.edgelist(gr)[order(E(gr)$weight),])))
-E(h)$weight <- E(gr)$weight[order(E(gr)$weight)]
 
-plot(gr, 
-     vertex.label = str_replace_all(bay$points[,1], ", ", ""),
-     vertex.size = 25,
-     #vertex.size = 10+(10*bay$points[,3])/bay$points[1,3],
-     edge.width=5*E(h)$weight, 
-     edge.arrow.size=E(gr)$weight,
-     vertex.color = paste("#00FF00",as.hexmode(floor(255*bay$points[,3]/bay$points[1,3])),sep=""),
-     curved = curve_multiple(gr, start = 0.5),
-     vertex.label.cex = 1,
-     vertex.label.color = "black",
-     layout = 2*t(apply(bay$points[,4:6],1,getCoordNode3D))
-     )
+# Build bayesian IS
+bay <- getISbayesian(aL, gL)
+# Build the graph
+grafo <- bayISgraph(bay, 1:5)
+
+
+bayISgraphLayout(bay, grafo, lyType = "5Dfix")
+
+bayesianISgraphDrawLabels(bay, grafo, bayISgraphLayout(bay, grafo, lyType = "5Dfix"))
+bayesianISgraphDrawLabels(bay, grafo, bayISgraphLayout(bay, grafo, lyType = "tree"))
+bayesianISgraphDrawPie(bay, grafo, 2*bayISgraphLayout(bay, grafo, lyType = "5Dfix"),
+                       c("#806000", "#002080", "#408000", "#800060", "#008080"))
+bayesianISgraphDrawPie(bay, grafo, 2*bayISgraphLayout(bay, grafo, lyType = "tree"),
+                       c("#806000", "#002080", "#408000", "#800060", "#008080"))
 
 
 #####################################################
