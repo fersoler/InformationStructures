@@ -93,10 +93,6 @@ bayISgraphLayout <- function(bayIS, bayISgr, lyType = "tree"){c
   
   cMat <- (bayIS$connect)
   
-  
-  print(cMat)
-  
-  
   quant <- apply(cMat,1,function(x) quantile(x,.5))
   cMat[cMat<quant] <- 0
   cMat[lower.tri(cMat)] <- 0

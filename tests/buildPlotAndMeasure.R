@@ -86,7 +86,6 @@ bay <- getISbayesian(aL, gL)
 grafo <- bayISgraph(bay, 1:5)
 
 
-bayISgraphLayout(bay, grafo, lyType = "5Dfix")
 
 bayesianISgraphDrawLabels(bay, grafo, bayISgraphLayout(bay, grafo, lyType = "5Dfix"))
 bayesianISgraphDrawLabels(bay, grafo, bayISgraphLayout(bay, grafo, lyType = "tree"))
