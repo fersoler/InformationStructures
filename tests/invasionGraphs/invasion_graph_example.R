@@ -34,6 +34,9 @@ IS5 <- ISbuild(as.data.frame(t(b)),A)
 gr5 <- ISgraph(IS5,1:5)
 ISgraphDrawLabels(IS5,gr5, ISgraphLayout(IS5, gr5, "5Dfix"))
 
+# Check if the connectivity is identical:
+identical(IS5$connectivity,out$IG)
+
 # Other examples: 
 (g <- data.matrix(t(matrix(c(
   -1, -0.16, -0.36, 0.18, -0.04,
@@ -41,8 +44,8 @@ ISgraphDrawLabels(IS5,gr5, ISgraphLayout(IS5, gr5, "5Dfix"))
   .25, -0.27, -1, 0.06, -0.23,
   0.12, 0.15, -0.16, -1, .35,
   -0.08, -0.33, .19, 0.20, -1),nrow = 5))))
-(a <- as.data.frame(t(c(1,2,-1.3,-.1,1))))
-#(a <- as.data.frame(t(c(1,-1,1,-1,1))))
+#(a <- as.data.frame(t(c(1,2,-1.3,-.1,1))))
+(a <- as.data.frame(t(c(1,-1,1,-1,1))))
 
 #(g <- data.matrix(matrix(0.1, nrow = 5,ncol = 5) - 1.1 * diag(5)))
 #(a <- as.data.frame(t(c(1,-.3,1,-.2,1))))
@@ -58,4 +61,7 @@ IS=LV.IS(g,as.matrix(t(a)))
 out=IG.function(IS)
 # use the plot.IG command to plot the figure with default settings
 plot.IG(out)
+
+# check if the connectivity is identical: 
+identical(IS5$connectivity,out$IG)
 
