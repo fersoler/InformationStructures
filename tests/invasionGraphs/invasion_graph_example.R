@@ -28,6 +28,13 @@ source("R/ISgraph.R")
 source("R/ISmeasures.R")
 library(tidyverse)
 
+
+# Our Information Structure:
+IS5 <- ISbuild(as.data.frame(t(b)),A)
+gr5 <- ISgraph(IS5,1:5)
+ISgraphDrawLabels(IS5,gr5, ISgraphLayout(IS5, gr5, "5Dfix"))
+
+# Other examples: 
 (g <- data.matrix(t(matrix(c(
   -1, -0.16, -0.36, 0.18, -0.04,
   0.27, -1, -1.13, -0.19, -0.20,
@@ -37,12 +44,11 @@ library(tidyverse)
 (a <- as.data.frame(t(c(1,2,-1.3,-.1,1))))
 #(a <- as.data.frame(t(c(1,-1,1,-1,1))))
 
-
 #(g <- data.matrix(matrix(0.1, nrow = 5,ncol = 5) - 1.1 * diag(5)))
 #(a <- as.data.frame(t(c(1,-.3,1,-.2,1))))
 
 # Out Information Structure:
-IS5 <- ISbuild(a,g)
+IS5 <- ISbuild(a, g)
 gr5 <- ISgraph(IS5,1:5)
 ISgraphDrawLabels(IS5,gr5, ISgraphLayout(IS5, gr5, "5Dfix"))
 
