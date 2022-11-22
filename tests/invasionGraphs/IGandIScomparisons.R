@@ -70,18 +70,19 @@ n_names <- c(
   `0.5` = "alphas in [-0.5,0.5]",
   `0.7` = "alphas in [-0.7,0.3]")
 
-
-ggplot(data = filter(tableTimes,k>1)) +
-  geom_point(mapping = aes(x = species, y = seconds, color = algorithm), position = "jitter") + 
+pdf(file="tests/invasionGraphs/pointsIGandIS.pdf", width = 10, height = 5)
+ggplot(data = filter(tableTimes, species>1)) +
+  geom_point(mapping = aes(x = species, y = seconds,color = algorithm), position = "jitter") + 
   scale_size(trans="log10") +
   facet_wrap(~ n, scales = "free_y", nrow = 2, labeller=as_labeller(n_names)) + 
-  scale_y_continuous(trans=scales::log_trans(), breaks=c(1,5,10,50,100,500,1000,5000))
+  scale_y_continuous(trans=scales::log_trans(), breaks=c(1,5,10,100,1000,5000))
+dev.off()
 
-
-
-ggplot(filter(tableTimes,k>1),
+pdf(file="tests/invasionGraphs/boxesIGandIS.pdf", width = 10, height = 5)
+ggplot(filter(tableTimes,species>1),
        aes(x = species, y = seconds, color = algorithm)) +
   geom_boxplot(aes(factor(species), seconds)) +
   scale_size(trans="log10") +
   facet_wrap(~ n, scales = "free_y", nrow = 2, labeller=as_labeller(n_names)) + 
-  scale_y_continuous(trans=scales::log_trans(), breaks=c(1,5,10,50,100,500,1000,5000))
+  scale_y_continuous(trans=scales::log_trans(), breaks=c(1,5,10,100,1000,5000))
+dev.off()

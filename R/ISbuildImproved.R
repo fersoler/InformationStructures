@@ -235,8 +235,10 @@ ISbuildThird <- function(alphas, gammas){
           
           # Set the GASS for the subcommunity with all > 0
           if(listGASSindex[getSubPosition(grZeroGASS)] == 0){
-            listGASSindex[getSubPosition(grZeroGASS)] <- lookAt
-            subsetGASS[nrow(subsetGASS)+1,]<-list(subset=toString(grZeroGASS), ind=lookAt)
+            if(checkGASS_LCP(alphas[grZeroGASS], gammas[grZeroGASS,grZeroGASS], v[grZeroGASS])){
+              listGASSindex[getSubPosition(grZeroGASS)] <- lookAt
+              subsetGASS[nrow(subsetGASS)+1,]<-list(subset=toString(grZeroGASS), ind=lookAt)
+            }
           }
           # Set the GASS for intermediate communities in which was not
           # previously set and chechGASS_LCP succeeds
@@ -412,8 +414,10 @@ ISbuildThirdWithCounters <- function(alphas, gammas){
           
           # Set the GASS for the subcommunity with all > 0
           if(listGASSindex[getSubPosition(grZeroGASS)] == 0){
-            listGASSindex[getSubPosition(grZeroGASS)] <- lookAt
-            subsetGASS[nrow(subsetGASS)+1,]<-list(subset=toString(grZeroGASS), ind=lookAt)
+            if(checkGASS_LCP(alphas[grZeroGASS], gammas[grZeroGASS,grZeroGASS], v[grZeroGASS])){
+              listGASSindex[getSubPosition(grZeroGASS)] <- lookAt
+              subsetGASS[nrow(subsetGASS)+1,]<-list(subset=toString(grZeroGASS), ind=lookAt)
+            }
           }
           # Set the GASS for intermediate communities in which was not
           # previously set and chechGASS_LCP succeeds
