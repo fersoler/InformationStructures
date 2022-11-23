@@ -1,6 +1,7 @@
 source("R/ISgraph.R")
 source("R/ISmeasures.R")
 source("R/ISbayesian.R")
+source("R/ISbuildImproved.R")
 
 library(tidyverse)
 
@@ -23,11 +24,21 @@ gr3 <- ISgraph(IS3,1:3)
 # IS measures:
 getISmeasures(IS3,gr3, alphas3[t,],gammas3)
 
+# Get the IS with improved algorithm
+IS3b <- ISbuildThird(alphas3[t,],gammas3)
+gr3b <- ISgraph(IS3b,1:3)
+# And the measures
+getISmeasures(IS3b,gr3b, alphas3[t,],gammas3)
+
+
 # Different ways to show the IS
 ISgraphDrawLabels(IS3,gr3, ISgraphLayout(IS3, gr3, "tree"))
 ISgraphDrawLabels(IS3,gr3, ISgraphLayout(IS3, gr3, "3Dcube"))
 ISgraphDrawPie(IS3,gr3, ISgraphLayout(IS3, gr3, "tree"), c("#806000", "#002080", "#408000"))
+ISgraphDrawPie(IS3b,gr3b, ISgraphLayout(IS3b, gr3b, "tree"), c("#806000", "#002080", "#408000"))
+
 ISgraphDrawPie(IS3,gr3, ISgraphLayout(IS3, gr3, "3Dcube"), c("#806000", "#002080", "#408000"))
+ISgraphDrawPie(IS3b,gr3b, ISgraphLayout(IS3b, gr3b, "3Dcube"), c("#806000", "#002080", "#408000"))
 
 ###########################################################################
 # Bayesian IS
@@ -113,10 +124,14 @@ bayesianISgraphDrawPie(bay, grafo, 2*bayISgraphLayout(bay, grafo, lyType = "tree
 
 IS5 <- ISbuild(a,g)
 gr5 <- ISgraph(IS5,1:5)
-
-
 # IS measures
 getISmeasures(IS5, gr5, a, g)
+
+### Improved version
+IS5b <- ISbuildThird(a,g)
+gr5b <- ISgraph(IS5b,1:5)
+getISmeasures(IS5b, gr5b, a, g)
+
 
 
 ISgraphDrawLabels(IS5,gr5, ISgraphLayout(IS5, gr5, "tree"))
@@ -125,7 +140,8 @@ ISgraphDrawPie(IS5,gr5, ISgraphLayout(IS5, gr5, "tree"),
                c("#806000", "#002080", "#408000", "#800060", "#008080"))
 ISgraphDrawPie(IS5,gr5, ISgraphLayout(IS5, gr5, "5Dfix"),
                c("#806000", "#002080", "#408000", "#800060", "#008080"))
-
+ISgraphDrawPie(IS5b,gr5b, ISgraphLayout(IS5b, gr5b, "5Dfix"),
+               c("#806000", "#002080", "#408000", "#800060", "#008080"))
 
 
 ## Purely cooperative  ###############################################
