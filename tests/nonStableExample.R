@@ -14,12 +14,16 @@ library(tidyverse)
 (a <- as.data.frame(t(structure(c(0.264781965175644, 0.584047143114731, 0.267519016517326,
                  0.171760221244767), .Dim = c(4L, 1L)))))
 
+#(a <- as.data.frame(t(structure(c(0.764781965175644, 0.584047143114731, 0.467519016517326,
+#                                  0.171760221244767), .Dim = c(4L, 1L)))))
+
 eigen(g,only.values = TRUE)
 
 # Out Information Structure:
-(IS5 <- ISbuildThird(a, g))
+(IS5 <- ISbuildSecond(a, g))
 gr5 <- ISgraph(IS5,1:4)
-ISgraphDrawLabels(IS5,gr5, ISgraphLayout(IS5, gr5, with_kk()))
+ISgraphDrawLabels(IS5,gr5, ISgraphLayout(IS5, gr5, as_star()))
+IS5$connectivity
 
 # Invasion Graph:
 IS=LV.IS(g,as.matrix(t(a)))
@@ -27,6 +31,7 @@ IS=LV.IS(g,as.matrix(t(a)))
 (out=IG.function(IS))
 # use the plot.IG command to plot the figure with default settings
 plot.IG(out)
+out$IG
 
 # non-permanent point 1,3,4
 p <- c(1,3,4)
