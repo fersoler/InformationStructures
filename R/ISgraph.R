@@ -45,28 +45,39 @@ nodeStrings <-function(isPoints, sNames){
 # Input:
 # - IS: Info. Structure (output of ISbuild)
 # - ISgr: IS graph (output of ISgraph)
-# - lyType: type of graph layout
+# - lyType: type of graph layout. It can be an igraph layout (as_star(), 
+#   in_circle(), etc.), or have some special values: 
 #   * "tree": use the igraph option layout_as_tree (default)
 #   * "3Dcube": for 3 species, nodes in the vertices of a cube
 #   * "5Dfix": for 5 species, nodes in fixed positions
 # Output: graph layout (matrix with node positions)
 ISgraphLayout <- function(IS, ISgr, lyType = "tree"){
   layt <- layout_(ISgr$graph,as_tree())
-  if(lyType == "tree"){
+  if(typeof(lyType)[1] == "list"){
     conn <- IS$connectivity
     rownames(conn) <- rownames(IS$points)
     colnames(conn) <- rownames(IS$points)
     reducedConn <- relation_incidence(transitive_reduction(
       as.relation(conn)))[rownames(conn), colnames(conn)]
     grNew <- graph_from_adjacency_matrix(reducedConn)
-    layt = layout_(grNew,as_tree())
-  }
-  if(lyType == "3Dcube" && dim(IS$points)[2] == 3){
-    layt <- getCoordIS3D(t(IS$points))
-  }
-  if(lyType == "5Dfix" && dim(IS$points)[2] == 5){
-    layt <- t(apply(IS$points, 1,
-                             function(x) as.matrix(fixedNodes5SCoords[fixedNodes5SCoords$subset==toString(c(1:5)[x>0]),][1,2:3])))
+    layt = layout_(grNew,lyType)
+  } else {
+    if(lyType == "tree"){
+      conn <- IS$connectivity
+      rownames(conn) <- rownames(IS$points)
+      colnames(conn) <- rownames(IS$points)
+      reducedConn <- relation_incidence(transitive_reduction(
+        as.relation(conn)))[rownames(conn), colnames(conn)]
+      grNew <- graph_from_adjacency_matrix(reducedConn)
+      layt = layout_(grNew,as_tree())
+    }
+    if(lyType == "3Dcube" && dim(IS$points)[2] == 3){
+      layt <- getCoordIS3D(t(IS$points))
+    }
+    if(lyType == "5Dfix" && dim(IS$points)[2] == 5){
+      layt <- t(apply(IS$points, 1,
+                      function(x) as.matrix(fixedNodes5SCoords[fixedNodes5SCoords$subset==toString(c(1:5)[x>0]),][1,2:3])))
+    }
   }
   layt
 }
