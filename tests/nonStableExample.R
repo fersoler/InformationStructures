@@ -17,7 +17,8 @@ library(tidyverse)
 #(a <- as.data.frame(t(structure(c(0.764781965175644, 0.584047143114731, 0.467519016517326,
 #                                  0.171760221244767), .Dim = c(4L, 1L)))))
 
-eigen(g,only.values = TRUE)
+# Real values of the eigenvalues: 
+sapply(eigen(g,only.values = TRUE)[1],Re)
 
 # Out Information Structure:
 (IS5 <- ISbuildSecond(a, g))
