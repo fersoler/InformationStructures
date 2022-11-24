@@ -18,7 +18,9 @@ library(tidyverse)
 #                                  0.171760221244767), .Dim = c(4L, 1L)))))
 
 # Real values of the eigenvalues: 
+#eigen(g,only.values = TRUE)
 sapply(eigen(g,only.values = TRUE)[1],Re)
+
 
 # Out Information Structure:
 (IS5 <- ISbuildSecond(a, g))
