@@ -296,20 +296,9 @@ ISbuildThird <- function(alphas, gammas){
   # Index of the GASS
   gassInd <- listGASSindex[getSubPosition(1:size)]
   
-  # Change the order of points to smaller to greater communities
-  # if(nPoints>2){
-  #   if(gassInd>1){
-  #     gassInd <- gassInd-2+nPoints
-  #   }
-  #   #orderP <- c(1,nPoints:2)
-  #   orderP <- listSubsGASS[listSubsGASS>0]
-  #   allStatPoints <- allStatPoints[orderP,]
-  #   rownames(allStatPoints) <- 1:nPoints
-  #   connectivity <- connectivity[orderP,orderP]
-  # }
   list(
     # The matrix with all stationary points: one point per row
-    points = allStatPoints,
+    points = as.matrix(allStatPoints),
     # The dataframe indicating the index of the GASS (2n column)
     # of each subsystem (1st column)
     subsetGASS   = subsetGASS,
@@ -398,7 +387,6 @@ ISbuildThirdSorted <- function(alphas, gammas){
           if(listGASSindex[getSubPosition(grZeroGASS)] == 0){
             if(checkGASS_LCP(alphas[grZeroGASS], gammas[grZeroGASS,grZeroGASS], v[grZeroGASS])){
               listGASSindex[getSubPosition(grZeroGASS)] <- lookAt
-              #subsetGASS[nrow(subsetGASS)+1,]<-list(subset=toString(grZeroGASS), ind=lookAt)
             }
           }
           # Set the GASS for intermediate communities in which was not
@@ -417,7 +405,6 @@ ISbuildThirdSorted <- function(alphas, gammas){
                 if(checkGASS_LCP(alphas[subC], gammas[subC,subC], v[subC])){
                   # register the gass for that subcommunity
                   listGASSindex[subCNum] <- lookAt
-                  #subsetGASS[nrow(subsetGASS)+1,]<-list(subset=toString(subC), ind=lookAt)
                 }
               }
             }
@@ -440,23 +427,13 @@ ISbuildThirdSorted <- function(alphas, gammas){
   sortingKeys <- unique(subsetGASS[,2])
   subsetGASS[,2] <- match(subsetGASS[,2],sortingKeys)
   rownames(subsetGASS) <- 1:2**size
-  # 
-  allStatPoints <- allStatPoints[match(sortingKeys,1:nPoints),]
+  allStatPoints <- matrix(allStatPoints[match(sortingKeys,1:nPoints),],ncol = size)
   listGASSindex <- match(listGASSindex,sortingKeys)
   listSubsGASS <- match(listSubsGASS,sortingKeys,nomatch = 0)
-  
-  ##
+  # Sorting END
   
   rownames(allStatPoints) <- 1:nPoints  # enumerate rows
   colnames(allStatPoints) <- c()        # columns
-  
-  
-  
-  # Sorting END
-  
-  
-  
-  
   
   # STEP 2: Connecting stationary points
   # Connectivity matrix
@@ -669,17 +646,6 @@ ISbuildThirdWithCounters <- function(alphas, gammas){
   # Index of the GASS
   gassInd <- listGASSindex[getSubPosition(1:size)]
   
-  # Change the order of points to smaller to greater communities
-  # if(nPoints>2){
-  #   if(gassInd>1){
-  #     gassInd <- gassInd-2+nPoints
-  #   }
-  #   #orderP <- c(1,nPoints:2)
-  #   orderP <- listSubsGASS[listSubsGASS>0]
-  #   allStatPoints <- allStatPoints[orderP,]
-  #   rownames(allStatPoints) <- 1:nPoints
-  #   connectivity <- connectivity[orderP,orderP]
-  # }
   list(
     nQPsolve = nQPsolve,
     nLCPsolve = nLCPsolve,
