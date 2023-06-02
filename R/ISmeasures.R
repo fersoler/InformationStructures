@@ -78,25 +78,33 @@ noel_and_npaths <- function(IS, ISgr){
 # Cooperative points
 # Input:
 # - IS: output of ISbuild
+# - alphas: vector of alpha values
 # Output:
 # - Matrix of cooperative points (may be empty)
-coopPoints <- function(IS){
-  points <- IS$points
-  conn <- IS$connectivity
-  nP <- nrow(points)
-  size <- ncol(points)
-  coopPoints <- as.data.frame(matrix(0,0,size))
-  for(I in 2:nP){
-    goingToI <- (1:nP)[conn[,I]==1]
-    if(sum(goingToI)>1){
-      prev <- colSums(points[goingToI,,drop=FALSE])>0
-      newVals <- (1:size)[prev == 0 & points[I,] > 0]
-      if(length(newVals)>0){
-        coopPoints[nrow(coopPoints)+1,] <- points[I,] 
+coopPoints <- function(IS, alphas){
+  isP  <- IS$points
+  sumAll <- colSums(IS$points)
+  cP   <- matrix(ncol = length(alphas), nrow = 0)
+  for(a in 1:length(alphas)){
+    if(sumAll[a]>0 && alphas[a] <= 0){
+      for(p in 2:dim(isP)[1]){
+        if(isP[p,a] > 0){
+          found <- FALSE
+          t <- 1
+          while(t <= dim(cP)[1] && !found){
+            if(isSubset(cP[t,], isP[p,])){
+              found <- TRUE
+            }
+            t <- t+1
+          }
+          if(!found){
+            cP <- rbind(cP,isP[p,])
+          }
+        }
       }
     }
   }
-  coopPoints
+  cP
 }
 
 # Get cooperative measures (for cooperative IS)
@@ -109,7 +117,7 @@ coopPoints <- function(IS){
 # - coopB: cooperation value B
 # - coopC: cooperation value C
 coopMeasures <- function(IS, alphas){
-  cooperativePoints <- coopPoints(IS)
+  cooperativePoints <- coopPoints(IS, alphas)
   allLevels <- apply(cooperativePoints, 1, function(x) nodeLevel(x))
   sumAll <- colSums(IS$points)
   ca <- sum(allLevels) - length(allLevels)

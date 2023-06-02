@@ -189,28 +189,3 @@ drawArrow <- function(angleSt, sepSt, angleEnd, sepEnd,type="short"){
   y1 <- yE-sep*(yE-yS)
   arrows(x0,y0,x1,y1, angle = 10, length=0.05,lwd = 1.5, code = 2)
 }
-
-#################################################################
-# Examples
-#################################################################
-
-
-# Cooperation:
-#pdf("figures/coop.pdf")
-(gEx = t(matrix(c(-1, 0.5, 0.4, -1), ncol=2)))
-drawCircleCones(gEx)
-#dev.off()
-
-# Competition:
-#pdf("figures/comp.pdf")
-(gEx = t(matrix(c(-1, -0.6, -0.5, -1), ncol=2)))
-drawCircleCones(gEx)
-#dev.off()
-
-# Cooperation (2->1) and competition (1->2):
-#pdf("figures/coopComp.pdf")
-(gEx = t(matrix(c(-1, 0.45, -0.38, -1), ncol=2)))
-drawCircleCones(gEx)
-#dev.off()
-
-
