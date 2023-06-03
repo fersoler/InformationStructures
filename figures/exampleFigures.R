@@ -172,8 +172,8 @@ plot_ly(
   type = "mesh3d",
   flatshading = TRUE,
   lighting = list(ambient = 0.5,
-                  diffuse = 0.8,
-                  fresnel = 0.1,
+                  diffuse = 0.8, # 0.8
+                  fresnel = 0.1, # .1
                   specular = 0.5,
                   roughness = 0.5,
                   facenormalsepsilon = 0,

@@ -247,7 +247,7 @@ getBorderPoint <- function(init, end, targetCol, gammas, minD){
   if(d<=minD){
     return(init)
   } else {
-    mp <- normVec(midPoint(init,end))
+    mp <- midPoint(init,end)
     ISmp <- ISbuildThird(
       as.data.frame(
         matrix(round(mp,5),1,3)),gammas)
@@ -266,7 +266,7 @@ getBorderPoint <- function(init, end, targetCol, gammas, minD){
 # Auxiliary functions to get the euclidean distance between two points
 # and the midPoint vetween two vectors
 euclidean <- function(p1,p2) sqrt(sum((p1-p2)^2))
-midPoint <- function(p1,p2) normVec(p1+p2)
+midPoint <- function(p1,p2) (p1+p2)/2
 # Normalize a vector
 normVec <- function(vec){
   vec/sqrt(sum(vec^2))
@@ -443,7 +443,7 @@ sphereSubCones <- function(gammas, cone, resol, minD){
           # Three different colors, in this case the color of the center
           # is given to the triangle.
           # Middle point
-          mp <- normalize(colSums(triPoin[1:3,1:3]))
+          mp <- (colSums(triPoin[1:3,1:3]))/3
           # IS of the middle point
           ISmp <- ISbuildThird(
             as.data.frame(
@@ -458,9 +458,9 @@ sphereSubCones <- function(gammas, cone, resol, minD){
         # size of the triangle is greater than the given limit.
 
         # Intermediate points between triangle vertices
-        n12 <- normalize(unlist(triPoin[1,1:3])+unlist(triPoin[2,1:3]))
-        n13 <- normalize(unlist(triPoin[1,1:3])+unlist(triPoin[3,1:3]))
-        n23 <- normalize(unlist(triPoin[2,1:3])+unlist(triPoin[3,1:3]))
+        n12 <- (unlist(triPoin[1,1:3])+unlist(triPoin[2,1:3]))/2
+        n13 <- (unlist(triPoin[1,1:3])+unlist(triPoin[3,1:3]))/2
+        n23 <- (unlist(triPoin[2,1:3])+unlist(triPoin[3,1:3]))/2
 
         # Add the three new points
         # First one:
