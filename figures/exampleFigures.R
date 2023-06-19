@@ -136,46 +136,50 @@ plot_ly(
 #  BIODIVERSITY SUB-CONES FOR 3 SPECIES
 ##########################################
 
+###
+###  LOOK AT THE SHINY APPS FOLDER
+###
+
+
 #(g3 <- t(matrix(c(-1,.3,.3,.3,-1,.3,.3,.3,-1),3,3)))
 
 # Slower but very good quality:
-#sph <- sphereSubCones(g3, c(1,1,1),120,0.005)
+# sph <- sphereSubCones(g3, c(1,1,1),120,0.005)
 
 # Quick (several minutes) with poorer quality
-sph <- sphereSubCones(g3,       # Gamma matrix
-                      c(1,1,1), # Cone
-                      80,       # Initial division on triangles
-                      0.02)     # Stop dividing triangles with vertices closer
-
-# Get the points (vertices of the triangles)
-dataPoints <- as.matrix(t(sph$points[,1:3]))
-# Triangles to be plotted are those with a color
-nonZeroTriang <- as.matrix(sph$triang[sph$triang[,4] != "no",1:3])-1
-# The lines below are to convert codes representing ISs into random colors
-# cange for other options
-colorCodes <- sph$triang[sph$triang[,4] != "no",4]
-allCodes <- unique(colorCodes)
-n <- length(allCodes)
-palette <- distinctColorPalette(n)
-for(c in 1:n){
-  colorCodes[colorCodes == allCodes[c]] <- palette[c]
-}
-# Plot
-plot_ly(
-  x = array(dataPoints[1,]),
-  y = array(dataPoints[2,]),
-  z = array(dataPoints[3,]),
-  i = array(nonZeroTriang[,1]),
-  j = array(nonZeroTriang[,2]),
-  k = array(nonZeroTriang[,3]),
-  facecolor = toRGB(colorCodes,alpha=1),
-  type = "mesh3d",
-  flatshading = TRUE,
-  lighting = list(ambient = 0.5,
-                  diffuse = 0.8, # 0.8
-                  fresnel = 0.1, # .1
-                  specular = 0.5,
-                  roughness = 0.5,
-                  facenormalsepsilon = 0,
-                  vertexnormalsepsilon = 0))
-
+# sph <- sphereSubCones(g3,       # Gamma matrix
+#                       c(1,1,1), # Cone
+#                       80,       # Initial division on triangles
+#                       0.01)     # Stop dividing triangles with vertices closer
+# 
+# # Get the points (vertices of the triangles)
+# dataPoints <- as.matrix(t(sph$points[,1:3]))
+# # Triangles to be plotted are those with a color
+# nonZeroTriang <- as.matrix(sph$triang[sph$triang[,4] != "no",1:3])-1
+# # The lines below are to convert codes representing ISs into random colors
+# # cange for other options
+# colorCodes <- sph$triang[sph$triang[,4] != "no",4]
+# allCodes <- unique(colorCodes)
+# n <- length(allCodes)
+# palette <- distinctColorPalette(n)
+# for(c in 1:n){
+#   colorCodes[colorCodes == allCodes[c]] <- palette[c]
+# }
+# # Plot
+# plot_ly(
+#   x = array(dataPoints[1,]),
+#   y = array(dataPoints[2,]),
+#   z = array(dataPoints[3,]),
+#   i = array(nonZeroTriang[,1]),
+#   j = array(nonZeroTriang[,2]),
+#   k = array(nonZeroTriang[,3]),
+#   facecolor = toRGB(colorCodes,alpha=1),
+#   type = "mesh3d",
+#   flatshading = TRUE,
+#   lighting = list(ambient = 0.5,
+#                   diffuse = 0.8,
+#                   fresnel = 0.1,
+#                   specular = 0.5,
+#                   roughness = 0.5,
+#                   facenormalsepsilon = 0,
+#                   vertexnormalsepsilon = 0))
