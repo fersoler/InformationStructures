@@ -6,7 +6,7 @@ source("figures/InformationField.R")
 
 
 # Gamma values
-(g3 <- t(matrix(c(-1,.3,.3,.3,-1,.3,.3,.3,-1),3,3)))
+(g3 <- t(matrix(c(-1,-0.1,-0.23,-0.3,-1,-0.12,-0.2,-0.17,-1),3,3)))
 
 ## Generate all cones to form a sphere
 sph111 <- sphereSubCones(g3,

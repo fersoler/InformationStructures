@@ -65,8 +65,8 @@ ui <- fluidPage(
   hr(),
   
   fluidRow(
-    column(width = 6, plotlyOutput("plot1"),uiOutput("dynamicText1")),
-    column(width = 6, plotOutput("plot2"),uiOutput("dynamicText2"))
+    column(width = 8, plotlyOutput("plot1"),uiOutput("dynamicText1")),
+    column(width = 4, plotOutput("plot2"),uiOutput("dynamicText2"))
   )
 )
 

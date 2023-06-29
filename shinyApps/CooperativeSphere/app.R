@@ -65,8 +65,8 @@ ui <- fluidPage(
   hr(),
   
   fluidRow(
-    column(width = 8, plotlyOutput("plot1")),
-    column(width = 4, plotOutput("plot2"),uiOutput("dynamicText2"),uiOutput("dynamicText1"))
+    column(width = 8, plotlyOutput("plot1"),uiOutput("dynamicText1")),
+    column(width = 4, plotOutput("plot2"),uiOutput("dynamicText2"))
   )
 )
 
@@ -106,8 +106,8 @@ server <- function(input, output) {
     
     datos <- showIS(c(x,y,z))
 
-    x_lim <- c(0, 10)
-    y_lim <- c(-15, 5)
+    x_lim <- c(-5, 15)
+    y_lim <- c(-10, 10)
     plot(datos$gr,
          layout = (datos$lay/2.5),
          edge.width=1,
