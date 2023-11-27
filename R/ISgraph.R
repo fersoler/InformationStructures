@@ -52,7 +52,7 @@ nodeStrings <-function(isPoints, sNames){
 # Output: graph layout (matrix with node positions)
 ISgraphLayout <- function(IS, ISgr, lyType = "tree"){
   layt <- layout_(ISgr$graph,as_tree())
-  if(lyType == "tree"){
+  if(lyType == "tree" && dim(IS$points)[1] > 1){
     conn <- IS$connectivity
     rownames(conn) <- rownames(IS$points)
     colnames(conn) <- rownames(IS$points)

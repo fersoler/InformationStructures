@@ -307,7 +307,7 @@ sphereSubCones <- function(gammas, cone, resol, minD){
       matrix(round(as.numeric(thePoints[p,1:3]),5),1,3)),gammas)
     # Get the GASS
     gass <- ISp$points[ISp$gassInd,]
-    # Check is the GASS is in the intented cone.
+    # Check is the GASS is in the intended cone.
     # It may happen that some points at the border of the cone
     # produce IS out of the cone by rounding issues.
     nonZerosCone <- c(1:3)[gass > 0]
@@ -349,7 +349,7 @@ sphereSubCones <- function(gammas, cone, resol, minD){
 
     # If the color of the triangle is set, then
     # go to the following triangle
-    if(theTriang[curntTriangle,4] != "no"){
+    while (theTriang[curntTriangle,4] != "no"){
       curntTriangle <- curntTriangle+1
     }
 
@@ -381,78 +381,78 @@ sphereSubCones <- function(gammas, cone, resol, minD){
         # triangle into three parts. One of the different color (trying to
         # find the 'line' dividing the colors) and the other two of the
         # color shared by two vertices.
-        if(length(difCols) == 2){
-          # Get the point with the different color and the two
-          # other points with equal color
-          if(identical(triPoin[1,4], triPoin[2,4])){
-            pDf <- 3 # Index of the point with different color
-            pE1 <- 1 # Points with equal color
-            pE2 <- 2
-          } else { # Other cases
-            if(identical(triPoin[1,4], triPoin[3,4])){
-              pDf <- 2
-              pE1 <- 1
-              pE2 <- 3
-            } else {
-              pDf <- 1
-              pE1 <- 2
-              pE2 <- 3
-            }
-          }
-          pointDif <- array(unlist(triPoin[pDf,1:3]))
-          pointEq1 <- array(unlist(triPoin[pE1,1:3]))
-          pointEq2 <- array(unlist(triPoin[pE2,1:3]))
-
-          # Get the intermediate points between the different point and the other
-          # two points. These points are taken as the line dividing the triangle
-          # into both colors.
-          difColor <- triPoin[pDf,4]
-          med1 <- getBorderPoint(pointDif,pointEq1,difColor,gammas,minD/4)
-          med2 <- getBorderPoint(pointDif,pointEq2,difColor,gammas,minD/4)
-
-          # The different vertex is too close to a point with the same color
-          # of the two other vertices. We finish by setting the color
-          # of the equal vertices to the triangle
-          if(identical(pointDif,med1) | identical(pointDif,med2)){
-            theTriang[curntTriangle,4] <- triPoin[pE1,4]
-          } else {
-            # In other case the triangle is divided
-
-            # The current triangle is updated and the color is set
-            theTriang[curntTriangle,1:3] <- c(triVert[pDf],lastPoint+1,lastPoint+2)
-            theTriang[curntTriangle,4] <- difColor
-
-            # Two new triangles are created and two new points
-            # First one:
-            thePoints[lastPoint+1,1:3] <- med1 # Coordinates
-            thePoints[lastPoint+1,  4] <- difColor
-            # Second
-            thePoints[lastPoint+2,1:3] <- med2
-            thePoints[lastPoint+2,  4] <- difColor
-
-            theTriang[totalTriangles+1,1:3] <- c(lastPoint+1, triVert[pE1], triVert[pE2])
-            theTriang[totalTriangles+2,1:3] <- c(lastPoint+1, lastPoint+2, triVert[pE2])
-            # Set the color:
-            theTriang[(totalTriangles+1):(totalTriangles+2),4] <- triPoin[pE1,4]
-
-            # There are 2 more points and 2 more triangles
-            lastPoint <- lastPoint+2
-            totalTriangles <- totalTriangles+2
-          }
-        } else {
-          # Three different colors, in this case the color of the center
-          # is given to the triangle.
-          # Middle point
-          mp <- (colSums(triPoin[1:3,1:3]))/3
-          # IS of the middle point
-          ISmp <- ISbuildThird(
-            as.data.frame(
-              matrix(round(mp,5),1,3)),gammas)
-          # Get IS type (color)
-          ISstr <- ISschemeToString(ISmp)
-          # Set the IS type
-          theTriang[curntTriangle,4] <- ISstr
-        }
+        # if(length(difCols) == 6){
+        #   # Get the point with the different color and the two
+        #   # other points with equal color
+        #   if(identical(triPoin[1,4], triPoin[2,4])){
+        #     pDf <- 3 # Index of the point with different color
+        #     pE1 <- 1 # Points with equal color
+        #     pE2 <- 2
+        #   } else { # Other cases
+        #     if(identical(triPoin[1,4], triPoin[3,4])){
+        #       pDf <- 2
+        #       pE1 <- 1
+        #       pE2 <- 3
+        #     } else {
+        #       pDf <- 1
+        #       pE1 <- 2
+        #       pE2 <- 3
+        #     }
+        #   }
+        #   pointDif <- array(unlist(triPoin[pDf,1:3]))
+        #   pointEq1 <- array(unlist(triPoin[pE1,1:3]))
+        #   pointEq2 <- array(unlist(triPoin[pE2,1:3]))
+        # 
+        #   # Get the intermediate points between the different point and the other
+        #   # two points. These points are taken as the line dividing the triangle
+        #   # into both colors.
+        #   difColor <- triPoin[pDf,4]
+        #   med1 <- getBorderPoint(pointDif,pointEq1,difColor,gammas,minD/4)
+        #   med2 <- getBorderPoint(pointDif,pointEq2,difColor,gammas,minD/4)
+        # 
+        #   # The different vertex is too close to a point with the same color
+        #   # of the two other vertices. We finish by setting the color
+        #   # of the equal vertices to the triangle
+        #   if(identical(pointDif,med1) | identical(pointDif,med2)){
+        #     theTriang[curntTriangle,4] <- triPoin[pE1,4]
+        #   } else {
+        #     # In other case the triangle is divided
+        # 
+        # # The current triangle is updated and the color is set
+        # theTriang[curntTriangle,1:3] <- c(triVert[pDf],lastPoint+1,lastPoint+2)
+        # theTriang[curntTriangle,4] <- difColor
+        # 
+        # # Two new triangles are created and two new points
+        # # First one:
+        # thePoints[lastPoint+1,1:3] <- med1 # Coordinates
+        # thePoints[lastPoint+1,  4] <- difColor
+        # # Second
+        # thePoints[lastPoint+2,1:3] <- med2
+        # thePoints[lastPoint+2,  4] <- difColor
+        # 
+        # theTriang[totalTriangles+1,1:3] <- c(lastPoint+1, triVert[pE1], triVert[pE2])
+        # theTriang[totalTriangles+2,1:3] <- c(lastPoint+1, lastPoint+2, triVert[pE2])
+        # # Set the color:
+        # theTriang[(totalTriangles+1):(totalTriangles+2),4] <- triPoin[pE1,4]
+        # 
+        # # There are 2 more points and 2 more triangles
+        # lastPoint <- lastPoint+2
+        # totalTriangles <- totalTriangles+2
+        #     # }
+        # } else {
+        # Three different colors, in this case the color of the center
+        # is given to the triangle.
+        # Middle point
+        mp <- (colSums(triPoin[1:3,1:3]))/3
+        # IS of the middle point
+        ISmp <- ISbuildThird(
+          as.data.frame(
+            matrix(round(mp,5),1,3)),gammas)
+        # Get IS type (color)
+        ISstr <- ISschemeToString(ISmp)
+        # Set the IS type
+        theTriang[curntTriangle,4] <- ISstr
+        #}
       } else {
         # In other case, divide the triangle into 4 new ones. This is when the
         # size of the triangle is greater than the given limit.
