@@ -1,3 +1,8 @@
+#################################################################
+# Functions to draw the biodiversity cones 
+# Author: Fernando Soler-Toscano - fsoler@us.es
+#################################################################
+
 library(plotly)
 
 # Build a generic mesh pattern to divide a biodiversity cone into n^2 triangles
@@ -85,42 +90,6 @@ normalize <- function(vec){
 setPointsTriangle <- function(verts, vb){
   apply(vb,1,function(x) {normalize(verts %*% x)})
 }
-
-## Not run:
-#########################################
-# Example
-#########################################
-
-# We set n to divide each cone into n^2 triangles
-# The higher value, the better visualization
-# n <- 80
-#
-# # Raw mesh that will be instantiated in each cone
-# rawMesh <- BuildMeshPattern(n)
-#
-# # Information of triangles:
-# it <- rawMesh$it-1
-#
-# # Instantiate the points of the mesh for several triangles:
-# # Change the vertices. Check that I'm not changing rows/columns in the matrix
-# # of vertices
-# vbA <- setPointsTriangle(matrix(c(c(0.8,-1,0), c(0.3,0,-0.8), c(-0.7,0,.1)),3,3),rawMesh$vb)
-# vbB <- setPointsTriangle(matrix(c(c(1,0,0), c(0, 0, 1), c(0, 1, 0)),3,3),rawMesh$vb)
-# vbC <- setPointsTriangle(matrix(c(c(1,0,0), c(0, 0, 1), c(0, 1, 2)),3,3),rawMesh$vb)
-# vbD <- setPointsTriangle(matrix(c(c(1,1,0), c(0, 0, 1), c(0, 1, 2)),3,3),rawMesh$vb)
-#
-# # Join all points and triangles.
-# vbAll <- cbind(vbA, vbB, vbC, vbD)
-# itAll <- rbind(it, dim(rawMesh$vb)[1]+it, 2*dim(rawMesh$vb)[1]+it, 3*dim(rawMesh$vb)[1]+it)
-#
-# # Visualization
-# plot_ly(
-#   x = vbAll[1,], y = vbAll[2,], z = vbAll[3,],
-#   i = itAll[,1], j = itAll[,2], k = itAll[,3],
-#   facecolor = toRGB(rep(c("red", "blue", "green", "white"), each = n^2), alpha = 0.5),
-#   type = "mesh3d", flatshading=TRUE
-# )
-## End(**Not run**)
 
 #######################################
 # LV cones

@@ -4,7 +4,6 @@ library(readr)
 library(mathjaxr)
 source("R/ISbuild.R")
 source("R/ISgraph.R")
-source("R/ISbuildImproved.R")
 
 
 gMatrix <- t(matrix(c(-1,.3,-.2,.15,-1,.23,-.31,.2,-1),3,3))
@@ -46,16 +45,16 @@ ISgraphDrawPie2 <- function(IS, ISgr, ISlay, colors, maxAbund = 0){
 
 
 showIS <- function(aVals){
-  IS3 <- ISbuildThird(as.data.frame(t(aVals)),gMatrix)
+  IS3 <- ISbuild(as.data.frame(t(aVals)),gMatrix)
   gr3 <- ISgraph(IS3, 1:3)
   ISgraphDrawPie2(IS3,gr3, ISgraphLayout(IS3, gr3, "3Dcube"), c("#806000", "#002080", "#408000"))
 }
 
-# Genera los datos iniciales
+# Load initial data: 
 load('shinyApps/CoopCompSphere/datosCoopComp.RData')
 
 
-# Define la UI de la aplicación
+# Define the app UI
 ui <- fluidPage(
   
   titlePanel("The inner structure of biodiversity (cooperative/competitive version)"),
@@ -70,10 +69,10 @@ ui <- fluidPage(
   )
 )
 
-# Define la lógica de la aplicación
+# app logic:
 server <- function(input, output) {
 
-  # Genera el primer plot
+  # first plot
   output$plot1 <- renderPlotly({
     plot_ly(
       x = array(spherePoints[1,]),
@@ -95,7 +94,7 @@ server <- function(input, output) {
     )
   })
   
-  # Genera el segundo plot
+  # second plot
   output$plot2 <- renderPlot({
     event_data <- event_data("plotly_click")
     req(!is.null(event_data))
@@ -158,5 +157,5 @@ server <- function(input, output) {
 }
 
 
-# Ejecuta la aplicación
+# Run the app:
 shinyApp(ui = ui, server = server)

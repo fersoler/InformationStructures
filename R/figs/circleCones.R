@@ -2,6 +2,7 @@ library(circlize)
 
 #################################################################
 # Functions to draw the 2D cones
+# Author: Fernando Soler-Toscano - fsoler@us.es
 #################################################################
 
 # Normalize a vector

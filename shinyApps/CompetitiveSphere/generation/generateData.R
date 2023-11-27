@@ -1,4 +1,4 @@
-source("R/ISbuildImproved.R")
+source("R/ISbuild.R")
 source("R/ISgraph.R")
 source("figures/circleCones.R")
 source("figures/sphereCones.R")

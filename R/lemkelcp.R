@@ -1,3 +1,6 @@
+# This file is a translation of the Python implementation of Lemke's
+# algorithm by Andy Lamperski: https://github.com/AndyLamperski/lemkelcp
+# Original implementation published under MIT license. 
 library(R6)
 
 lemketableau <- R6::R6Class(

@@ -3,6 +3,7 @@ source("R/ISgraph.R")
 
 # IS measures from:
 # https://doi.org/10.1371/journal.pcbi.1010412
+# Author of the code: Fernando Soler-Toscano - fsoler@us.es
 
 getISmeasures <- function(IS,ISgr,alphas,gMatrix){
   noelAndPaths <- noel_and_npaths(IS, ISgr)

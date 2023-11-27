@@ -1,4 +1,11 @@
-# Building and drawing the IS graphs
+# Building and drawing IS graphs
+
+# The code in this file displays Information Structures as described in:
+# Pablo Almaraz, Piotr Kalita, José A. Langa, Fernando Soler-Toscano,
+# "Structural stability of invasion graphs for generalized 
+# Lotka--Volterra systems". arXiv:2209.09802
+# https://arxiv.org/abs/2209.09802
+# Author of the code: Fernando Soler-Toscano - fsoler@us.es
 
 library(igraph)
 library(relations)

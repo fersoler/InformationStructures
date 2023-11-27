@@ -6,13 +6,12 @@ library(readr)
 library(mathjaxr)
 source("R/ISbuild.R")
 source("R/ISgraph.R")
-source("R/ISbuildImproved.R")
-source("figures/circleCones.R")
-source("figures/InformationField.R")
+source("R/figs/circleCones.R")
+source("R/figs/InformationField.R")
 source("shinyApps/InfoStructuresDemo2D/R/modFuncs.R")
 
 
-# Define la UI de la aplicación
+# Define the app UI
 ui <- fluidPage(
   title = "Information Structures and Information Fields",
   tags$head(
@@ -96,22 +95,12 @@ ui <- fluidPage(
                        "graph represent solutions going from one community",
                        "to another one.",
                        "Colors represent relative abundances.")),
-        # fluidRow(
-        #   column(6, plotOutput("plotIS")),
-        #   column(6, plotOutput("plotIS2"))
-        # ),
-        # fluidRow(
-        #   column(12, align = "center", tableOutput('ISpoints'))
-        # )
         fluidRow(
           class = "align-items-center",
           column(5, plotOutput("plotIS")),
           column(5, plotOutput("plotIS2")),
           column(2, tableOutput('ISpoints'))
         ),
-        # fluidRow(
-        #   column(12, align = "center", tableOutput('ISpoints'))
-        # )
       ),
       tabPanel(
         title = "Info Field",
@@ -138,12 +127,6 @@ ui <- fluidPage(
       tabPanel(
         title = "Settings",
         icon = icon("sliders-h"),
-        # radioButtons("order", strong("Move order"),
-        #              choices = c("Go first", "Go second"), inline = TRUE
-        # ),
-        # sliderInput("y_cost", strong("Cost of improving technology"),
-        #             min = 0, max = 100, value = 4
-        # ),
         sliderInput("varTime", strong("Time"),
                     min = 5, max = 100, value = 20, step = 5
         ),
@@ -160,7 +143,7 @@ ui <- fluidPage(
   )
 )
 
-# Define la lógica de la aplicación
+# define the app logic:
 server <- function(input, output) {
   
   output$compPlotEvol <- renderPlot({
@@ -223,7 +206,7 @@ server <- function(input, output) {
     # Gamma matrix
     g <- matrix(c(-1,g21,g12,-1),2,2)
     # Build the IS
-    IS <- ISbuildThird(a,g)
+    IS <- ISbuild(a,g)
     # Plot the Lyapunov function
     plotLyapFunc2(IS, g, a, c(u1,u2), input$varTime, input$ifRes, input$checkIF)
   
@@ -241,7 +224,7 @@ server <- function(input, output) {
     # Gamma matrix
     g <- matrix(c(-1,g21,g12,-1),2,2)
     # Build the IS
-    IS <- ISbuildThird(a,g)
+    IS <- ISbuild(a,g)
     gr <- ISgraph(IS, 1:2)
     ISgraphDrawPie(IS, gr, ISgraphLayout(IS, gr, "tree"), colors12)
   })
@@ -258,7 +241,7 @@ server <- function(input, output) {
     # Gamma matrix
     g <- matrix(c(-1,g21,g12,-1),2,2)
     # Build the IS
-    IS <- ISbuildThird(a,g)
+    IS <- ISbuild(a,g)
     gr <- ISgraph(IS, 1:2)
     ISgraphDrawPie(IS, gr, ISgraphLayout(IS, gr, "tree"), colors12)
   })
@@ -274,7 +257,7 @@ server <- function(input, output) {
     # Gamma matrix
     g <- matrix(c(-1,g21,g12,-1),2,2)
     # Build the IS
-    IS <- ISbuildThird(a,g)
+    IS <- ISbuild(a,g)
     gr <- ISgraph(IS, 1:2)
     ISgraphDrawLabels(IS,gr, ISgraphLayout(IS, gr, "tree"))
   })
@@ -290,7 +273,7 @@ server <- function(input, output) {
     # Gamma matrix
     g <- matrix(c(-1,g21,g12,-1),2,2)
     # Build the IS
-    IS <- ISbuildThird(a,g)
+    IS <- ISbuild(a,g)
   
     pp <- IS$points
     
@@ -327,6 +310,6 @@ server <- function(input, output) {
 
 
 
-# Ejecuta la aplicación
+# run the app:
 shinyApp(ui = ui, server = server)
 

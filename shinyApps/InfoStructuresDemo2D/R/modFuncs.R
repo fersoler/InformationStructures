@@ -132,15 +132,9 @@ plot2Dsystem <- function(gmm, alp, point){
   
 }
 
-# Test, borrar
-# g <- matrix(c(-1,0.23,0.3,-1),2,2)
-# a <-  c(-0.2,2.3)
-# plot2Dsystem(g,a,c(0,1))
-
-
 evolGraphic <- function(g,a,initP,time,checkVecISp){
   
-  IS <- ISbuildThird(a,g)
+  IS <- ISbuild(a,g)
   u10 <- initP[1]
   u20 <- initP[2]
   limX <- max(IS$points[,1])*1.3 # Limit for x
@@ -205,7 +199,7 @@ evolGraphic <- function(g,a,initP,time,checkVecISp){
 ## Display the IF
 
 # Function to plot the Information Field of a given
-# IS with 2 species. The optional argument 'np' sets
+# IS with 2 species. The argument 'np' sets
 # the divisions of the grid. The higher value, the
 # best resolution but taking more time.
 plotLyapFunc2 <- function(IS, g, a, stateSys, time, np, checkIF){
@@ -308,14 +302,5 @@ plotLyapFunc2 <- function(IS, g, a, stateSys, time, np, checkIF){
         line = list(color = 'black'), showlegend = F)
     }
   }
-  # 
   fig
 }
-
-# 
-# g <- matrix(c(-1,0.23,0.3,-1),2,2)
-# a <-  c(-0.2,2.3)
-# IS <- ISbuildThird(a,g)
-# u10 <- 0.3
-# u20 <- 0.4
-# plotLyapFunc2(IS,g,a,c(u10,u20), 20, 20)
