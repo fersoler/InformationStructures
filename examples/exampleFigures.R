@@ -80,6 +80,13 @@ drawCircleCones(g)
 # Cooperation:
 (gEx = t(matrix(c(-1, 0.5, 0.4, -1), ncol=2)))
 drawCircleCones(gEx)
+# Other ways of drawing the 2D cones: 
+# 1. Draw all cones without labels:  
+drawCircleCones(gEx, allCones = TRUE, drawLabels = FALSE)
+# 2. Remove cones out of 11:  
+drawCircleCones(gEx, allCones = FALSE, drawLabels = FALSE)
+# 3. Add labels just for the 11 cone: 
+drawCircleCones(gEx, allCones = FALSE, drawLabels = TRUE)
 
 # Competition:
 (gEx = t(matrix(c(-1, -0.6, -0.5, -1), ncol=2)))
@@ -136,6 +143,85 @@ plot_ly(
   type = "mesh3d", flatshading=TRUE
 )
 # end fig --------------------------------------------
+
+##########################################
+#  DRAW JUST ONE CONE
+##########################################
+
+
+# Gamma values
+(g3 <- t(matrix(c(-1,.3,-.3,.3,-1,-.3,-.3,.3,-1),3,3)))
+
+# begin fig --------------------------------------------
+# We set n to divide each cone into n^2 triangles
+# The higher value, the better visualization
+n <- 200
+# Raw mesh that will be instantiated in each cone
+rawMesh <- BuildMeshPattern(n)
+# Information of triangles:
+it <- rawMesh$it-1
+
+# Instantiate the cone
+cone <- c(1,1,1)
+vbCone <- setPointsCone(-g3,cone,rawMesh$vb)
+
+# Visualization
+coneColor <- "#0D9127"   # Color of the cone
+planeColor <- "#606060"  # Color of the planes
+alphaCone <- 1           # Transparency of the cone
+alphaPlanes <- 0.6       # Transparency of the planes
+pPlane <- t(matrix(c(1,1,0,1,-1,0,-1,1,0,-1,-1,0), 3, 4))
+tPlane <- t(matrix(c(1,2,3,2,3,4), 3, 2))-1
+
+plot_ly(
+  x = vbCone[1,], y = vbCone[2,], z = vbCone[3,],
+  i = it[,1], j = it[,2], k = it[,3],
+  facecolor = toRGB(rep(coneColor, n^2), alpha = alphaCone),
+  type = "mesh3d", 
+  flatshading = TRUE,
+  lighting = list(ambient = 0.6,
+                  diffuse = 0.8,
+                  fresnel = 0.1,
+                  specular = 0.5,
+                  roughness = 0.5,
+                  facenormalsepsilon = 0,
+                  vertexnormalsepsilon = 0)) %>% 
+  layout(
+    scene = list(
+      xaxis = list(range = c(-1, 1), 
+                   title = list(text = "r\u2081", 
+                                font = list(size = 18, color = "black", 
+                                            family = "Arial, sans-serif", 
+                                            weight = "bold"))),
+      yaxis = list(range = c(-1, 1), 
+                   title = list(text = "r\u2082", 
+                                font = list(size = 18, color = "black", 
+                                            family = "Arial, sans-serif", 
+                                            weight = "bold"))),
+      zaxis = list(range = c(-1, 1), 
+                   title = list(text = "r\u2083", 
+                                font = list(size = 18, color = "black", 
+                                            family = "Arial, sans-serif", 
+                                            weight = "bold")))
+    )) %>% add_trace(
+  type = "mesh3d",
+  x = pPlane[,1], y = pPlane[,2], z = pPlane[,3],
+  i = tPlane[,1], j = tPlane[,2], k = tPlane[,3],
+  facecolor = toRGB(rep(planeColor, 2), alpha=alphaPlanes)
+) %>% add_trace(
+  type = "mesh3d",
+  x = pPlane[,1], y = pPlane[,3], z = pPlane[,2],
+  i = tPlane[,1], j = tPlane[,2], k = tPlane[,3],
+  facecolor = toRGB(rep(planeColor, 2), alpha=alphaPlanes)
+) %>% add_trace(
+  type = "mesh3d",
+  x = pPlane[,3], y = pPlane[,2], z = pPlane[,1],
+  i = tPlane[,1], j = tPlane[,2], k = tPlane[,3],
+  facecolor = toRGB(rep(planeColor, 2), alpha=alphaPlanes)
+)
+
+# end fig --------------------------------------------
+
 
 ##########################################
 #  BIODIVERSITY SUB-CONES FOR 3 SPECIES

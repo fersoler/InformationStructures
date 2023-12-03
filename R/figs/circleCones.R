@@ -51,8 +51,16 @@ writeLabel <- function(angle,sep,label){
 }
 
 # Draw the circle
-drawCircleCones <- function(gamma){
+# gamma: Matrix of interactions
+# allCones: indicates if all cones are drawn or just the one with 2 species
+# deawLabels: indicates if IS and labels are drawn.
+drawCircleCones <- function(gamma, allCones = TRUE, drawLabels = TRUE){
   cone <- setMaxCone2D(gamma)
+  if(allCones){
+    labelsDraw <- 1:6
+  } else {
+    labelsDraw <- c(6)
+  }
   # Colors can be changed here
   # The first list contains the colors of the cones
   # The second list, "light" versions of the first three colors
@@ -61,42 +69,44 @@ drawCircleCones <- function(gamma){
   plot(c(-1.5, 1.5), c(-1.5, 1.5), type = "n", axes = FALSE, ann = FALSE, asp = 1)
   coneLabelsSize <- matrix(0, ncol=2, nrow=6)
   # cone 00 (always 3rd quadrant)
-  draw.sector(180, 270,clock.wise = FALSE, col = colors1[4], border = NA)
+  if(allCones) draw.sector(180, 270,clock.wise = FALSE, col = colors1[4], border = NA)
   coneLabelsSize[1,] <- c(180, 270)
   iss <- data.frame(180,270,"00",stringsAsFactors = FALSE)
   if(cone[1]>180){
     # Cone 10
-    draw.sector(270, cone[1],clock.wise = FALSE, col = colors1[3], border = NA)
+    if(allCones) draw.sector(270, cone[1],clock.wise = FALSE, col = colors1[3], border = NA)
     coneLabelsSize[2,] <- c(270,cone[1])
     iss[nrow(iss)+1,] <- c(270,cone[1], "0010")
     draw.sector(cone[1], 360, clock.wise = FALSE, col = colors2[1], border = NA)
+    labelsDraw <- c(labelsDraw, 3)
     coneLabelsSize[3,] <- c(cone[1],360)
     iss[nrow(iss)+1,] <- c(cone[1],360,"001011")
     startMainCone <- 0
   }
   if(cone[1]<=180){
-    draw.sector(270, 360,clock.wise = FALSE, col = colors1[3], border = NA)
+    if(allCones) draw.sector(270, 360,clock.wise = FALSE, col = colors1[3], border = NA)
     coneLabelsSize[2,] <- c(270,360)
     iss[nrow(iss)+1,] <- c(270,360,"0010")
-    draw.sector(360, cone[1], clock.wise = FALSE, col = colors2[3], border = NA)
+    if(allCones) draw.sector(360, cone[1], clock.wise = FALSE, col = colors2[3], border = NA)
     coneLabelsSize[3,] <- c(0,cone[1])
     iss[nrow(iss)+1,] <- c(0,cone[1], "000110")
     startMainCone <- cone[1]
   }
   if(cone[2]>90){
-    draw.sector(cone[2], 180, clock.wise = FALSE, col = colors1[2], border = NA)
+    if(allCones) draw.sector(cone[2], 180, clock.wise = FALSE, col = colors1[2], border = NA)
     coneLabelsSize[4,] <- c(cone[2], 180)
     iss[nrow(iss)+1,] <- c(cone[2], 180, "0001")
     draw.sector(90, cone[2], clock.wise = FALSE, col = colors2[1], border = NA)
+    labelsDraw <- c(labelsDraw, 5)
     coneLabelsSize[5,] <- c(90, cone[2])
     iss[nrow(iss)+1,] <- c(90, cone[2], "000111")
     endMainCone <- 90
   }
   if(cone[2]<=90){
-    draw.sector(90, 180, clock.wise = FALSE, col = colors1[2], border = NA)
+    if(allCones) draw.sector(90, 180, clock.wise = FALSE, col = colors1[2], border = NA)
     coneLabelsSize[4,] <- c(90, 180)
     iss[nrow(iss)+1,] <- c(90, 180, "0001")
-    draw.sector(cone[2], 90, clock.wise = FALSE, col = colors2[2], border = NA)
+    if(allCones) draw.sector(cone[2], 90, clock.wise = FALSE, col = colors2[2], border = NA)
     coneLabelsSize[5,] <- c(cone[2], 90)
     iss[nrow(iss)+1,] <- c(cone[2], 90, "001001")
     endMainCone <- cone[2]
@@ -107,12 +117,14 @@ drawCircleCones <- function(gamma){
   # Axes
   lines(c(-1.1,1.1), c(0,0), lwd=1)
   lines(c(0,0), c(-1.1,1.1), lwd=1)
-  # Axes labels
-  text(-1.3,0, expression('b'[1]),cex=1.3)
-  text(0,-1.3, expression('b'[2]),cex=1.3)
-  for(i in 1:6){
-    writeConeSize(coneLabelsSize[i,1], coneLabelsSize[i,2])
-    drawIScone(as.double(iss[i,1]), as.double(iss[i,2]), iss[i,3])
+  if(drawLabels){
+    # Axes labels
+    text(-1.3,0, expression('b'[1]),cex=1.3)
+    text(0,-1.3, expression('b'[2]),cex=1.3)
+    for(i in labelsDraw){
+      writeConeSize(coneLabelsSize[i,1], coneLabelsSize[i,2])
+      drawIScone(as.double(iss[i,1]), as.double(iss[i,2]), iss[i,3])
+    }
   }
 }
 
