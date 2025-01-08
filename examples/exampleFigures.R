@@ -11,7 +11,7 @@ source("R/figs/InformationField.R")
 ##########################################
 
 # Alpha values
-a <- as.data.frame(matrix(c(2,1.8),1,2))
+a <- c(2,1.8)
 # Gamma matrix
 g <- matrix(c(-1,0.2,0.3,-1),2,2)
 
@@ -53,7 +53,7 @@ initPoints <- data.frame(y1 = c(0.01, 0.2,0.01,3, 0.3),  # u1 values
                          cols = c("green", "orange", "blue","brown", "red")) # Colors
 
 # Solve gLV equations and draw trajectories
-pars <- c(a1 = a[1,1], a2 = a[1,2], g12 = g[1,2], g21 = g[2,1])
+pars <- c(a1 = a[1], a2 = a[2], g12 = g[1,2], g21 = g[2,1])
 times <- seq(0,1000,length.out = 2)
 for(p in 1:nrow(initPoints)){
   y0 <- c(y1 = initPoints[p,1], y2 = initPoints[p,2])
@@ -104,7 +104,7 @@ drawCircleCones(gEx)
 # Gamma values
 (g3 <- t(matrix(c(-1,.3,.3,.3,-1,.3,.3,.3,-1),3,3)))
 # Alpha values
-(a3 <- as.data.frame(t(c(1,-.2,1.3))))
+(a3 <- c(1,-.2,1.3))
 # Information Structure:
 IS3 <- ISbuild(a3,g3)
 gr3 <- ISgraph(IS3, 1:3)
@@ -262,6 +262,9 @@ plot_ly(
   facecolor = toRGB(colorCodes,alpha=1),
   type = "mesh3d",
   flatshading = TRUE,
+  hovertemplate = paste('x = %{x:.2f}',
+                        '<br>y = %{y:.2f}',
+                        '<br>z = %{z:.2f}'),
   lighting = list(ambient = 0.6,
                   diffuse = 0.8,
                   fresnel = 0.1,
@@ -270,8 +273,10 @@ plot_ly(
                   facenormalsepsilon = 0,
                   vertexnormalsepsilon = 0)) %>%
   layout(scene = list(
-    xaxis = list(visible=FALSE),
-    yaxis = list(visible=FALSE),
-    zaxis = list(visible=FALSE)
-  ))
+           xaxis = list(visible = FALSE),
+           yaxis = list(visible = FALSE),
+           zaxis = list(visible = FALSE)#,
+           #aspectmode = 'manual'  # Usar proporciones manuales
+           #aspectratio = list(x = 1, y = 1, z = 1)  # Proporciones iguales
+         ))
 # end fig --------------------------------------------

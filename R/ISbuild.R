@@ -70,7 +70,8 @@ getAllSuperPos <- function(list1,list2){
 # - $connectivity: connectivity matrix. Rows and columns are the indexes of
 # the points in $points
 # - $gassInd: index of the point which is the GASS of the whole system
-ISbuild <- function(alphas, gammas){
+ISbuild <- function(alphas0, gammas){
+  alphas <- as.data.frame(matrix(alphas0,nrow = 1))
   # STEP 1: Finding the GASSes for all subsystems
 
   # Size of the system (number of species)

@@ -220,7 +220,7 @@ server <- function(input, output) {
     g12 <- input$g12
     g21 <- input$g21
     
-    a <- as.data.frame(matrix(c(a1,a2),1,2))
+    a <- c(a1,a2)
     # Gamma matrix
     g <- matrix(c(-1,g21,g12,-1),2,2)
     # Build the IS
@@ -237,7 +237,7 @@ server <- function(input, output) {
     g12 <- input$g12
     g21 <- input$g21
     
-    a <- as.data.frame(matrix(c(a1,a2),1,2))
+    a <- c(a1,a2)
     # Gamma matrix
     g <- matrix(c(-1,g21,g12,-1),2,2)
     # Build the IS
@@ -253,7 +253,7 @@ server <- function(input, output) {
     g12 <- input$g12
     g21 <- input$g21
     
-    a <- as.data.frame(matrix(c(a1,a2),1,2))
+    a <- c(a1,a2)
     # Gamma matrix
     g <- matrix(c(-1,g21,g12,-1),2,2)
     # Build the IS
@@ -269,7 +269,7 @@ server <- function(input, output) {
     g12 <- input$g12
     g21 <- input$g21
     
-    a <- as.data.frame(matrix(c(a1,a2),1,2))
+    a <- c(a1,a2)
     # Gamma matrix
     g <- matrix(c(-1,g21,g12,-1),2,2)
     # Build the IS

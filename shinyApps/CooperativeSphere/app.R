@@ -44,7 +44,7 @@ ISgraphDrawPie2 <- function(IS, ISgr, ISlay, colors, maxAbund = 0){
 
 
 showIS <- function(aVals){
-  IS3 <- ISbuild(as.data.frame(t(aVals)),gMatrix)
+  IS3 <- ISbuild(aVals,gMatrix)
   gr3 <- ISgraph(IS3, 1:3)
   ISgraphDrawPie2(IS3,gr3, ISgraphLayout(IS3, gr3, "3Dcube"), c("#806000", "#002080", "#408000"))
 }

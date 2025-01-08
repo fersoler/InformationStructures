@@ -108,7 +108,7 @@ setPointsCone <- function(gamma, cone, vb){
   vectors <- -diag(3)
   for(i in 1:3){
     if(cone[i]==1){
-      vectors[,i] <- gamma[,i]
+      vectors[,i] <- normalize(gamma[,i])
     }
   }
   apply(vb,1,function(x) {normalize(vectors %*% x)})

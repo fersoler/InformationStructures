@@ -72,7 +72,7 @@ for(n in 1:8){
 nonZeroTriang <- as.matrix(allTriangles[allTriangles[,4] != "no",1:3])
 
 # The lines below are to convert codes representing ISs into random colors
-# cange for other options
+# change for other options
 colorCodes <- allTriangles[allTriangles[,4] != "no",4]
 allCodes <- unique(colorCodes)
 n <- length(allCodes)

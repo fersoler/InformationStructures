@@ -14,6 +14,7 @@ source("R/ISbuild.R")
 source("R/figs/sphereCones.R")
 
 
+
 # Function to build the 3D mesh (points and triangles) that can be used to
 # display the sub-cones of a gLV system with 3 specied.
 # Input:
@@ -44,8 +45,7 @@ sphereSubCones <- function(gammas, cone, resol, minD){
   # The color of each point is set:
   for(p in 1:nrow(thePoints)){
     # build the IS of the current points
-    ISp <- ISbuild(as.data.frame(
-      matrix(round(as.numeric(thePoints[p,1:3]),5),1,3)),gammas)
+    ISp <- ISbuild(as.matrix(round(as.numeric(thePoints[p,1:3]),5),nrow=1),gammas)
     # Get the GASS
     gass <- ISp$points[ISp$gassInd,]
     # Check is the GASS is in the intended cone.
@@ -123,9 +123,7 @@ sphereSubCones <- function(gammas, cone, resol, minD){
         # Middle point
         mp <- (colSums(triPoin[1:3,1:3]))/3
         # IS of the middle point
-        ISmp <- ISbuild(
-          as.data.frame(
-            matrix(round(mp,5),1,3)),gammas)
+        ISmp <- ISbuild(as.matrix(round(mp,5),nrow=1),gammas)
         # Get IS type (color)
         ISstr <- ISschemeToString(ISmp)
         # Set the IS type
@@ -145,17 +143,17 @@ sphereSubCones <- function(gammas, cone, resol, minD){
         thePoints[lastPoint+1,1:3] <- n12 # Coordinates
         thePoints[lastPoint+1,4] <-  # IS type (color)
           ISschemeToString(
-            ISbuild(round(thePoints[lastPoint+1,1:3],5),gammas))
+            ISbuild(as.matrix(round(thePoints[lastPoint+1,1:3],5),nrow=1),gammas))
         # Second
         thePoints[lastPoint+2,1:3] <- n13
         thePoints[lastPoint+2,4] <-
           ISschemeToString(
-            ISbuild(round(thePoints[lastPoint+2,1:3],5),gammas))
+            ISbuild(as.matrix(round(thePoints[lastPoint+2,1:3],5),nrow=1),gammas))
         # Third
         thePoints[lastPoint+3,1:3] <- n23
         thePoints[lastPoint+3,4] <-
           ISschemeToString(
-            ISbuild(round(thePoints[lastPoint+3,1:3],5),gammas))
+            ISbuild(as.matrix(round(thePoints[lastPoint+3,1:3],5),nrow=1),gammas))
         
         # New triangles
         # Set triangle vertices
