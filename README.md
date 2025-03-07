@@ -1,6 +1,10 @@
 # Informational Structures
 
-Code to generate and measure Information Structures following the algorithm in Pablo Almaraz, Piotr Kalita, José A. Langa, Fernando Soler-Toscano, "Structural stability of invasion graphs for generalized Lotka--Volterra systems", [arXiv:2209.09802](https://arxiv.org/abs/2209.09802).
+Code to generate and measure Information Structures following the algorithm in Pablo Almaraz, Piotr Kalita, José A. Langa, Fernando Soler-Toscano, "Structural stability of invasion graphs for generalized Lotka--Volterra systems", *Journal of Mathematical Biology* 88, 64 (2024). (doi: 10.1007/s00285-024-02087-8).
+
+The code has also been used in:
+
+- Oscar Godoy, Fernando Soler-Toscano, José R. Portillo, and José A. Langa. 2024. "The Assembly and Dynamics of Ecological Communities in an Ever-Changing World". *Ecological Monographs*, Volume 94, Issue 4, e1633 (2024). (doi: /10.1002/ecm.1633).
 
 Some relevant files:
 
