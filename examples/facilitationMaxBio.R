@@ -4,14 +4,16 @@ source("R/figs/circleCones.R")
 source("R/figs/sphereCones.R")
 source("R/figs/sphereSubCones.R")
 source("R/figs/InformationField.R")
+library(geosphere)
+library(pracma)
 
 
 
 
-######################################################
-#  BIODIVERSITY SUB-CONES FOR 3 SPECIES WITH DIFFERENT
+###################################################### -
+#  BIODIVERSITY SUB-CONES FOR 3 SPECIES WITH DIFFERENT ----
 #  INTERACTION MATRICES
-######################################################
+###################################################### -
 
 # Visualization
 planeColor <- "#606060"  # Color of the planes
@@ -21,9 +23,12 @@ pPlane <- t(matrix(c(1,1,0,1,-1,0,-1,1,0,-1,-1,0), 3, 4))
 pPlane <- t(matrix(c(1,1,0,1,0,0,0,1,0,0,0,0), 3, 4))
 tPlane <- t(matrix(c(1,2,3,2,3,4), 3, 2))-1
 
+## The code below is to generate the data, it`s computationally hard. The data is 
+## loaded below
 
 # # Cooperation index
 # cI <- 0.1
+# Set the A matrix: 
 # (g3 <- t(matrix(c(-1,cI,cI,cI,-1,cI,cI,cI,-1),3,3)))
 # sph1 <- sphereSubCones(g3,      # Gamma matrix
 #                        c(1,1,1), # Cone
@@ -131,11 +136,11 @@ plot_ly(
       i = tPlane[,1], j = tPlane[,2], k = tPlane[,3],
       facecolor = toRGB(rep(planeColor, 2), alpha=alphaPlanes)
     )
-# end fig --------------------------------------------
+# end fig 
 
-#######
-#####   VARIATION
-################################
+################################ -
+## VARIATION                   ----
+################################ -
 
 
 dP1 <- as.matrix(t(sph1$points[,1:3]))
@@ -213,18 +218,15 @@ plot_ly(
     )
 
 
-#######################################
-# MEASURING THE MAX BIODIVERSITY CONE
-########################################
-
-library(geosphere)
-library(pracma)
+####################################### -
+# MEASURING THE MAX BIODIVERSITY CONE ----
+######################################## -
 
 # TEST
-# Octante positivo:
-(p <- rbind(c(0,0), c(0, 90), c(90,0), c(0,0)))
-# Proporción de la superficie: 
-areaPolygon(p,1,0)/(4*pi)
+# Positive octant:
+# (p <- rbind(c(0,0), c(0, 90), c(90,0), c(0,0)))
+# Surface:
+# areaPolygon(p,1,0)/(4*pi)
 
 # Get the longitude and latitude of a point given cartesian coordinates
 getLongLat <- function(coord){
@@ -257,6 +259,7 @@ areaMaxWithConstant <- function(val){
 # Random matrices
 meanVals <- rep(0,900)
 sphPorts <- rep(0,900)
+# 300 matrices with a_ij in [-0.45, 0.45]
 for (i in 1:300) {
   m <- matrix(runif(9,-0.45,0.45),3,3)
   diag(m) <- 0
@@ -264,6 +267,7 @@ for (i in 1:300) {
   diag(m) <- -1
   sphPorts[i] <- areaMaxBioCone(m)
 }
+# 300 matrices with a_ij in [-0.45, 0]
 for (i in 301:600) {
   m <- matrix(runif(9,-0.45,0),3,3)
   diag(m) <- 0
@@ -271,6 +275,7 @@ for (i in 301:600) {
   diag(m) <- -1
   sphPorts[i] <- areaMaxBioCone(m)
 }
+# 300 matrices with a_ij in [0, 0.45]
 for (i in 601:900) {
   m <- matrix(runif(9,0,0.45),3,3)
   diag(m) <- 0
@@ -280,7 +285,6 @@ for (i in 601:900) {
 }
 
 # Constant matrices
-
 coopIndex <- seq(-0.49,0.49,0.01)
 spherePortion <- sapply(coopIndex,areaMaxWithConstant)
 
