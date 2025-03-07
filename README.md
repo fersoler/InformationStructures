@@ -5,6 +5,7 @@ Code to generate and measure Information Structures following the algorithm in P
 The code has also been used in:
 
 - Oscar Godoy, Fernando Soler-Toscano, José R. Portillo, and José A. Langa. 2024. "The Assembly and Dynamics of Ecological Communities in an Ever-Changing World". *Ecological Monographs*, Volume 94, Issue 4, e1633 (2024). (doi: /10.1002/ecm.1633).
+- Oscar Godoy, Fernando Soler-Toscano, José R. Portillo, Antonio Suárez, José A. Langa, "Cooperation maximizes biodiversity", *bioRxiv* 2024.10.22.619656; (doi: 10.1101/2024.10.22.619656)
 
 Some relevant files:
 
