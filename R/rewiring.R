@@ -10,7 +10,8 @@ isDiagDomRows <- function(A){
   all(A1 > A2)
 }
 
-# 1. Two species u_i and u_j reduce their competition when a common cooperator
+# 1. Competition is reduced thanks to a common cooperator  ----
+# Two species u_i and u_j reduce their competition when a common cooperator
 # appears. This function receives an interaction matrix and reduces competition
 # among species having a common cooperator. 
 rewiringReduceComp <- function(a){
@@ -35,11 +36,11 @@ rewiringReduceComp <- function(a){
         A[j,i] <- a[j,i]/sumCoop
       }
     }
-  }
+  } 
   A
 }
 
-# 2. Adverse abiotic conditions increase cooperation
+# 2. Adverse abiotic conditions increase cooperation  ----
 # - 'a' is a matrix of interations
 # - 'r' is the vector with intrinsic growth rates
 rewiringIncreaseCoop <- function(a, r){
@@ -68,12 +69,30 @@ rewiringIncreaseCoop <- function(a, r){
   A
 }
 
+# 3. Stronger intrinsic growth rate increases intra-specific competition  ----
+# - a: matrix of interactions
+# - r: vector of intrinsic growth rates
+rewiringIncreaseIntraComp <- function(a, r){
+  newA <- a
+  size <- dim(a)[1]
+  diag(newA) <- pmax(rep(1, size), r)*diag(newA)
+  newA
+}
+
+# 4. Inter-specific interactions are reduced with dimensionality ----
+rewiringReduceInteractionsDimens <- function(a){
+  size <- dim(a)[1]
+  newA <- a/log2(size)
+  diag(newA) <- diag(a)
+  newA
+}
+
+
 # This function is used to modify a matrix 'newA' in order 
 # oldA is a diagonally dominant (rows) matrix, newA is a modification that
 # could not be diagonally dominant. The modification is supposed not to 
 # affect the diagonal. This funciton modulates the changes in order to keep 
 # diagonal dominance. 
-
 # Previous functions modify a matrix of interactions 'oldA' to get a new
 # one, 'newA', but sometimes the diagonal dominance (by rows) may be lost. In 
 # case that we want to preserve the diagonal dominance of 'oldA', this function 
@@ -83,13 +102,13 @@ keepDiagDomRows <- function(oldA, newA){
   if(!isDiagDomRows(newA)){
     size <- dim(newA)[1]  # size
     for(i in 1:size){
-     oldRow <- oldA[i,]
-     newRow <- newA[i,]
-     difRow <- newRow-oldRow
-     if(max(abs(difRow)) > 0){
-      maxSum <- 2*abs(oldA[i,i]) - sum(abs(oldRow))
-      A[i,] <- oldRow + difRow*0.99999*(maxSum/sum(abs(difRow)))
-     }
+      oldRow <- oldA[i,]
+      newRow <- newA[i,]
+      difRow <- newRow-oldRow
+      if(max(abs(difRow)) > 0){
+        maxSum <- 2*abs(oldA[i,i]) - sum(abs(oldRow))
+        A[i,] <- oldRow + difRow*0.99999*(maxSum/sum(abs(difRow)))
+      }
     }
   }
   A
